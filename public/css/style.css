@@ -1,0 +1,28 @@
+body {
+    font-family: sans-serif;
+    margin: 15%;
+}
+
+img {
+    border: 1px solid #333;;
+    width: 250px;
+}
+
+.btn {
+    background-color: salmon;
+    padding: 3px;
+    color: #fff;
+}
+
+.bg-new {
+    background-color: darksalmon;
+    padding: 5px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+}
+
+.alert-success {
+    background-color: #d1e7dd;
+}
