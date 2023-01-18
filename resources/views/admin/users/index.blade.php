@@ -21,12 +21,12 @@
             <td class="{{ $classNameColumn }}">
                 @if( !empty( $user->getRoleNames() ) )
                     @foreach($user->getRoleNames() as $role)
-                        <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">{{ $role }}</span>
+                        <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">{{ $role }}</span>
                     @endforeach
                 @endif
             </td>
             <td class="{{ $classNameColumn }}">
-                <a href="{{ route('users.show', $user->id) }}" class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-2 text-sm py-1 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Show</a>
+                <a href="{{ route('users.show', $user->id) }}" class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-2 text-sm py-1 mr-2 mb-2 focus:outline-none">Show</a>
             </td>
         </tr>
         @endforeach
