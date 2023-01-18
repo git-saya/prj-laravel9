@@ -1,72 +1,104 @@
-<template>
-	<div class="login-signup-form animated fadeInDown">
-		<div className="form">
-            <form v-on:submit.prevent="register">
-                <h1 className="title">
-                	Signup for free.
-            	</h1>
+<script setup>
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
 
-                <p>{{ form }}</p>
-                
-                <input type="text" id="fullname" v-model="form.fullname" placeholder="Fullname">
-				<div v-if="errors.name" style="color: red">
-                    {{ errors.name[0] }}
-                </div>
+const form = useForm({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    terms: false,
+});
 
-                <input type="text" id="email" v-model="form.email" placeholder="Email">
-				<div v-if="errors.email" style="color: red">
-                    {{ errors.email[0] }}
-                </div>
-
-                <input type="text" id="password" v-model="form.password" placeholder="Password">
-				<div v-if="errors.password" style="color: red">
-                    {{ errors.password[0] }}
-                </div>
-
-                <input type="text" id="password_confirmation" v-model="form.password_confirmation" placeholder="Password Confirmation">
-
-                <button type="submit" class="btn btn-block">Submit</button>
-				<p className="message">
-                	Already registered? <router-link v-bind:to="{name: 'Login'}">Sign In</router-link>
-            	</p>
-            </form>
-        </div>
-	</div>
-</template>
-
-<script>
-	import {reactive, ref} from 'vue'
-	import {useRouter} from 'vue-router'
-	export default {
-        setup() {
-            const router = useRouter()
-
-            let form = reactive({
-                email: '',
-                password: '',
-				fullname: '',
-				password_confirmation: ''
-            })
-
-            let errors = ref({})
-
-            const register = async () => {
-                await axios.post('/api/register', form)
-                .then(response => {
-					router.push({name: 'Login'})
-                }).catch(error => {
-                    const response = error.response
-                    if(response && response.status === 422) {
-                        errors.value = response.data.messages
-                    }
-                })
-            }
-
-            return {
-                form,
-                register,
-                errors
-            }
-        }
-	}
+const submit = () => {
+    form.post(route('register'), {
+        onFinish: () => form.reset('password', 'password_confirmation'),
+    });
+};
 </script>
+
+<template>
+    <GuestLayout>
+        <Head title="Register" />
+
+        <form @submit.prevent="submit">
+            <div>
+                <InputLabel for="name" value="Name" />
+
+                <TextInput
+                    id="name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.name"
+                    required
+                    autofocus
+                    autocomplete="name"
+                />
+
+                <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="email" value="Email" />
+
+                <TextInput
+                    id="email"
+                    type="email"
+                    class="mt-1 block w-full"
+                    v-model="form.email"
+                    required
+                    autocomplete="username"
+                />
+
+                <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="password" value="Password" />
+
+                <TextInput
+                    id="password"
+                    type="password"
+                    class="mt-1 block w-full"
+                    v-model="form.password"
+                    required
+                    autocomplete="new-password"
+                />
+
+                <InputError class="mt-2" :message="form.errors.password" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="password_confirmation" value="Confirm Password" />
+
+                <TextInput
+                    id="password_confirmation"
+                    type="password"
+                    class="mt-1 block w-full"
+                    v-model="form.password_confirmation"
+                    required
+                    autocomplete="new-password"
+                />
+
+                <InputError class="mt-2" :message="form.errors.password_confirmation" />
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                <Link
+                    :href="route('login')"
+                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                    Already registered?
+                </Link>
+
+                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Register
+                </PrimaryButton>
+            </div>
+        </form>
+    </GuestLayout>
+</template>

@@ -1,12 +1,12 @@
 import {createRouter, createWebHistory, createWebHashHistory} from 'vue-router'
 
-import Home from '../pages/Home.vue'
-import Users from '../pages/Users.vue'
-import UserForm from '../pages/UserForm.vue'
-import Login from '../pages/auth/Login.vue'
-import Register from '../pages/auth/Register.vue'
-import About from '../pages/About.vue'
-import NotFound from '../pages/NotFound.vue'
+import Home from '../Pages/Home.vue'
+import Users from '../Pages/Users.vue'
+import UserForm from '../Pages/UserForm.vue'
+import Login from '../Pages/auth/LoginSample.vue'
+import Register from '../Pages/auth/RegisterSample.vue'
+import About from '../Pages/About.vue'
+import NotFound from '../Pages/NotFound.vue'
 
 const routes = [
 	{

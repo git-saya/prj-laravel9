@@ -1,67 +1,90 @@
-<template>
-	<div class="login-signup-form animated fadeInDown">
-		<div className="form">
-            <form v-on:submit.prevent="login">
-                <h1 className="title">
-                    Login into your account.
-                </h1>
+<script setup>
+import Checkbox from '@/Components/Checkbox.vue';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
 
-                <p>{{ form }}</p>
-                
-                <input type="text" id="email" v-model="form.email" placeholder="Email">
-                <div v-if="errors.email" style="color: red">
-                    {{ errors.email[0] }}
-                </div>
+defineProps({
+    canResetPassword: Boolean,
+    status: String,
+});
 
-                <input type="text" id="password" v-model="form.password" placeholder="Password">
-                <div v-if="errors.password" style="color: red">
-                    {{ errors.password[0] }}
-                </div>
+const form = useForm({
+    email: '',
+    password: '',
+    remember: false,
+});
 
-                <button type="submit" class="btn btn-block">Submit</button>
-                <p className="message">
-                    Not registered? 
-                    <router-link v-bind:to="{name: 'Register'}">Create an account</router-link>
-                </p>
-            </form>
-        </div>
-	</div>
-</template>
-
-<script>
-    import {reactive, ref} from 'vue'
-	import {useRouter} from 'vue-router'
-	export default {
-        setup() {
-            const router = useRouter()
-
-            let form = reactive({
-                email: '',
-                password: ''
-            })
-
-            let errors = ref({})
-
-            const login = async () => {
-                await axios.post('/api/sanctum/token', form)
-                .then(response => {
-                    if(response.data.status) {
-                        localStorage.setItem('ACCESS_TOKEN', response.data.token)
-                        router.push({name: 'Home'})
-                    }
-                }).catch(error => {
-                    const response = error.response
-                    if(response && response.status === 422) {
-                        errors.value = response.data.messages
-                    }
-                })
-            }
-
-            return {
-                form,
-                login,
-                errors
-            }
-        }
-	}
+const submit = () => {
+    form.post(route('login'), {
+        onFinish: () => form.reset('password'),
+    });
+};
 </script>
+
+<template>
+    <GuestLayout>
+        <Head title="Log in" />
+
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+            {{ status }}
+        </div>
+
+        <form @submit.prevent="submit">
+            <div>
+                <InputLabel for="email" value="Email" />
+
+                <TextInput
+                    id="email"
+                    type="email"
+                    class="mt-1 block w-full"
+                    v-model="form.email"
+                    required
+                    autofocus
+                    autocomplete="username"
+                />
+
+                <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="password" value="Password" />
+
+                <TextInput
+                    id="password"
+                    type="password"
+                    class="mt-1 block w-full"
+                    v-model="form.password"
+                    required
+                    autocomplete="current-password"
+                />
+
+                <InputError class="mt-2" :message="form.errors.password" />
+            </div>
+
+            <div class="block mt-4">
+                <label class="flex items-center">
+                    <Checkbox name="remember" v-model:checked="form.remember" />
+                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                </label>
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                <Link
+                    v-if="canResetPassword"
+                    :href="route('password.request')"
+                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                    Forgot your password?
+                </Link>
+
+                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Log in
+                </PrimaryButton>
+            </div>
+        </form>
+    </GuestLayout>
+</template>

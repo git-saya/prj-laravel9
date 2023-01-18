@@ -1,14 +1,14 @@
 import { createBrowserRouter, Navigate } from "react-router-dom"
-import Login from './views/Login'
-import Register from './views/Register'
+import Login from './Views/Login'
+import Register from './Views/Register'
 
-import Users from './views/Users'
-import UserForm from './views/UserForm'
-import Dashboard from './views/Dashboard'
+import Users from './Views/Users'
+import UserForm from './Views/UserForm'
+import Dashboard from './Views/Dashboard'
 import PageNotFound from './PageNotFound'
 
-import DefaultLayout from './components/DefaultLayout'
-import GuestLayout from './components/GuestLayout'
+import DefaultLayout from './Components/DefaultLayout'
+import GuestLayout from './Components/GuestLayout'
 
 const router = createBrowserRouter([
     {
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/react',
-                element: <Navigate to="/react/users" />
+                element: <NaVigate to="/react/users" />
             },
             {
                 path: '/react/users',

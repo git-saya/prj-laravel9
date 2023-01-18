@@ -6,7 +6,7 @@ import { RouterProvider } from "react-router-dom"
 import Themes from './Themes'
 import React from 'react'
 import router from './router'
-import {ContextProvider} from './contexts/ContextProvider.jsx'
+import {ContextProvider} from './Contexts/ContextProvider.jsx'
 
 ReactDOM.createRoot(document.getElementById('app')).render(  
     <React.StrictMode>
